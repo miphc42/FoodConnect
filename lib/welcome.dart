@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodbank/Global/niceBar.dart';
 import 'package:foodbank/home.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:foodbank/camera.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -15,6 +16,24 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
+    widget.storage.readChoice().then((bool value) {
+      if(value==true){
+        Navigator.pushReplacement(
+          context, 
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => Home(),
+          ),
+        );
+      }else{
+        Navigator.pushReplacement(
+          context, 
+          PageRouteBuilder(
+            pageBuilder: (context, animation1, animation2) => Camera(),
+          ),
+        );
+      }
+    });
+
     return Scaffold(
       appBar: NiceBar(),
       backgroundColor: Colors.lightGreenAccent,
@@ -77,6 +96,9 @@ class _WelcomeState extends State<Welcome> {
             ),
             onPressed: (){
               widget.storage.writeChoice(false);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Camera())
+              );
             },
           ),
           ],
