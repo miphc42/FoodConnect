@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodbank/home.dart';
+import 'package:foodbank/camera.dart';
 
 void main() {
   runApp(
@@ -9,7 +10,7 @@ void main() {
         fontFamily: "TenaliRamakrishna",
         primarySwatch: Colors.lightGreen,
       ),
-      home: Home(),
+      home: Camera(),
     )
   );
 }
