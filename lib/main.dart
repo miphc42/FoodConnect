@@ -6,6 +6,7 @@ void main() {
     MaterialApp(
       title: "FoodConnect",
       theme: new ThemeData(
+        fontFamily: "TenaliRamakrishna",
         primarySwatch: Colors.lightGreen,
       ),
       home: Home(),
