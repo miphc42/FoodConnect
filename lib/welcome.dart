@@ -24,7 +24,7 @@ class _WelcomeState extends State<Welcome> {
             pageBuilder: (context, animation1, animation2) => Home(),
           ),
         );
-      }else{
+      }else if(value==false){
         Navigator.pushReplacement(
           context, 
           PageRouteBuilder(
