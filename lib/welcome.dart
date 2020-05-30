@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foodbank/Global/niceBar.dart';
+import 'package:foodbank/home.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
@@ -14,52 +16,71 @@ class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("FoodConnect"),
-      ),
-      backgroundColor: Colors.lightGreen,
-      body: Column(
-        children: <Widget>[
-        Text(
-          'Hi! Welcome to FoodConnect',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20
-          ),
-        ),
-        SizedBox(height: 20,),
-        Text(
-          'Are you a Food Bank or a citizen?',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18
-          ),
-        ),
-        FlatButton(
-          child: Text(
-            'Food Bank',
+      appBar: NiceBar(),
+      backgroundColor: Colors.lightGreenAccent,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+          Text(
+            'Hi! Welcome to FoodConnect',
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 18
+              color: Colors.green[900],
+              fontWeight: FontWeight.bold,
+              fontSize: 30
             ),
           ),
-          onPressed: (){
-            widget.storage.writeChoice(true);
-          },
-        ),
-        FlatButton(
-          child: Text(
-            'Citizen',
+          SizedBox(height: 80,),
+          Text(
+            'Are you a Food Bank or a donator?',
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 18
+              color: Colors.green[900],
+              fontSize: 28
             ),
           ),
-          onPressed: (){
-            widget.storage.writeChoice(false);
-          },
+          SizedBox(height: 50,),
+          FlatButton(
+            padding: EdgeInsets.fromLTRB(20,10,20,10),
+            shape: StadiumBorder(
+              side: BorderSide(color: Colors.green[900], width: 2)
+            ),
+            child: Text(
+              'Food Bank',
+              style: TextStyle(
+                fontFamily: "Arial",
+                fontWeight: FontWeight.bold,
+                color: Colors.green[900],
+                fontSize: 20
+              ),
+            ),
+            onPressed: (){
+              widget.storage.writeChoice(true);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Home())
+              );
+            },
+          ),
+          SizedBox(height: 10,),
+          FlatButton(
+            padding: EdgeInsets.fromLTRB(40,10,40,10),
+            shape: StadiumBorder(
+              side: BorderSide(color: Colors.green[900], width: 2)
+            ),
+            child: Text(
+              'Donator',
+              style: TextStyle(
+                fontFamily: "Arial",
+                fontWeight: FontWeight.bold,
+                color: Colors.green[900],
+                fontSize: 20
+              ),
+            ),
+            onPressed: (){
+              widget.storage.writeChoice(false);
+            },
+          ),
+          ],
         ),
-        ],
       ),
     );
   }
