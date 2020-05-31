@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodbank/Global/niceBar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class Home extends StatefulWidget {
@@ -8,6 +9,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final databaseReference = Firestore.instance;
   List<String> items=[];
   TextEditingController _textController;
   var _listSection = List<Widget>();
@@ -28,6 +30,16 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void createRecord() async {
+    for(int i=0;i<items.length;i++){
+      await databaseReference.collection("requested_items")
+        .document(items[i])
+        .setData({
+          'location':"Mississauga Ontario"
+        });
+    }
   }
   
 
@@ -111,6 +123,21 @@ class _HomeState extends State<Home> {
             FlatButton(
               color: Colors.lightGreen,
               child: Text(
+                'Save!',
+                style: TextStyle(
+                  fontFamily: "Arial",
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[900],
+                  fontSize: 18
+                ),
+              ),
+              onPressed: (){
+                createRecord();
+              },
+            ),
+            FlatButton(
+              color: Colors.lightGreen,
+              child: Text(
                 'Edit Information',
                 style: TextStyle(
                   fontFamily: "Arial",
@@ -143,6 +170,7 @@ class _HomeState extends State<Home> {
                 return;
               }
               setState(() {
+                items.add(_textController.text);
                 _listSection.add(listSectionMethod(_textController.text));
                 _textController.clear();
                 Navigator.pop(context);
