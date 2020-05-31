@@ -13,6 +13,12 @@ class _HomeState extends State<Home> {
   var _listSection = List<Widget>();
   String name;
 
+  @override
+  void initState(){
+    super.initState();
+    _textController = TextEditingController();
+  }
+
   Card listSectionMethod(String title) {
     return new Card(
       child: ListTile(
@@ -23,12 +29,13 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: NiceBar(),
-      backgroundColor: Colors.lightGreenAccent,
+      backgroundColor: Colors.lightGreen[400],
       body: Center(
         child: ListView(
           shrinkWrap: true,
@@ -77,10 +84,7 @@ class _HomeState extends State<Home> {
                       icon: Icon(Icons.add),
                       color: Colors.green[900],
                       onPressed: (){
-                        setState(() {
-                          _showAddDialog();
-                          _listSection.add(listSectionMethod(name));
-                        });
+                        _showAddDialog();
                       },
                     ),
                     SizedBox(width: 2,),
@@ -120,28 +124,32 @@ class _HomeState extends State<Home> {
           ],
         ),
       )
-
     );
   }
   _showAddDialog(){
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-                            title: Text("Enter Item"),
-                            content: TextField(
-                              controller: _textController,
-                            ),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text('Done!'),
-                                onPressed: (){
-                                  setState((){
-                                    name=_textController.text;
-                                  });
-                                  Navigator.pop(context);
-                                }
-                              )
-                            ],
+        title: Text("Add Item"),
+        content: TextField(
+          controller: _textController,
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Save'),
+            onPressed: () {
+              if(_textController.text.isEmpty){
+                Navigator.pop(context);
+                return;
+              }
+              setState(() {
+                _listSection.add(listSectionMethod(_textController.text));
+                _textController.clear();
+                Navigator.pop(context);
+              });
+            }, 
+          )
+        ],
       )
     );
   }
