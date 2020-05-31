@@ -124,7 +124,10 @@ setState((){_listSection.add(listSectionMethod(all.contains(
                 ),
               ),
               onPressed: (){
-                deleteRecord();
+                showAlertDialog(context).then((value) => deleteRecord());
+                
+             //   print("AAAAAAAAAAAAAAAAAAAA");
+                
               },
             ),
              FlatButton(
@@ -165,7 +168,7 @@ setState((){_listSection.add(listSectionMethod(all.contains(
         )
       );}
       
-  void deleteRecord() async {
+  void deleteRecord() {
     Firestore.instance.collection('requested_items').document("Orange").delete().whenComplete((){
   print('Field Deleted');
    setState(() {
@@ -174,5 +177,70 @@ setState((){_listSection.add(listSectionMethod(all.contains(
               });
 });
   }
+   String t;
+   String x,y;
+   Future showAlertDialog(BuildContext context) async {
+     x ="";
+     y="";
+     getData();
+  // set up the button
+  Widget okButton = await FlatButton(
+    child: Text("OK"),
+    onPressed: () {
+        Navigator.of(context).pop();
+     },
+  );
+
+  // Firestore.instance
+  //       .collection('requeted_items')
+  //       .document('Orange')
+  //       .get()
+  //       .then((DocumentSnapshot ds) {
+  //      t = ds.data.toString();
+  //      print(t);
+  //      print("AAAAAAAAA");
+  //      if(t=="null"){
+  //        t = "No Foodbanks Need this Item";
+  //        print("ww");
+  //      }
+  //      print(t);
+  //   });
+  
+  // set up the AlertDialog
+  AlertDialog alert = await AlertDialog(
+    title: Text("Location of Foodbank"),
+    content: Text(t),
+    actions: [
+      okButton,
+    ],
+  );
+  x = "";
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+void getData() {
+  databaseReference
+      .collection("requested_items")
+      .getDocuments()
+      .then((QuerySnapshot snapshot) {
+    snapshot.documents.forEach((f) => f.documentID.toString() == "Orange"? x = f.data.toString().split(": ").toString(): y = "No Foodbanks Need this Item");
+   
+    snapshot.documents.forEach((f) =>print( f.documentID.toString()));
+    setState(() {
+       if(x==""){
+      t = y;
+    }else{t=x;}
+    });
+    print(t);
+    
+  });
+}
+
 }
 
