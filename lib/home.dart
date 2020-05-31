@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodbank/Global/niceBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:foodbank/welcome.dart';
 
 
 class Home extends StatefulWidget {
@@ -12,6 +11,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final databaseReference = Firestore.instance;
   List<String> items=[];
+  String location;
   TextEditingController _textController;
   var _listSection = List<Widget>();
   String name;
@@ -19,6 +19,7 @@ class _HomeState extends State<Home> {
   @override
   void initState(){
     super.initState();
+    location = "Mississauga, Ontario";
     _textController = TextEditingController();
   }
 
@@ -38,7 +39,7 @@ class _HomeState extends State<Home> {
       await databaseReference.collection("requested_items")
         .document(items[i])
         .setData({
-          'location':"Mississauga Ontario"
+          'location':location
         });
     }
   }
@@ -47,30 +48,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      title: Text(
-        'FoodConnect',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontFamily: 'TenaliRamakrishna',
-          color: Colors.white,
-          fontSize: 30,
-        ),
-      ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            iconSize: 30.0,
-            color: Colors.white,
-           onPressed: (){
-            //  Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(builder: (context) => Welcome())
-            //   );
-           }) //{
-           //   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) //=> Texting()));
-          //  },
-        ],),
-      backgroundColor: Colors.lightGreen[400],
+      appBar: NiceBar(),
+      backgroundColor: Colors.lightGreen[300],
       body: Center(
         child: ListView(
           shrinkWrap: true,
@@ -169,7 +148,9 @@ class _HomeState extends State<Home> {
                   fontSize: 18
                 ),
               ),
-              onPressed: (){},
+              onPressed: (){
+                _showAddDialog2();
+              },
             ),
           ],
         ),
@@ -195,6 +176,34 @@ class _HomeState extends State<Home> {
               setState(() {
                 items.add(_textController.text);
                 _listSection.add(listSectionMethod(_textController.text));
+                _textController.clear();
+                Navigator.pop(context);
+              });
+            }, 
+          )
+        ],
+      )
+    );
+  }
+  _showAddDialog2(){
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Change Location"),
+        content: TextField(
+          keyboardType: TextInputType.multiline,
+          controller: _textController,
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Save'),
+            onPressed: () {
+              if(_textController.text.isEmpty){
+                Navigator.pop(context);
+                return;
+              }
+              setState(() {
+                location=_textController.text;
                 _textController.clear();
                 Navigator.pop(context);
               });
