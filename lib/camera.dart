@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:foodbank/Global/niceBar.dart';
+import 'package:foodbank/welcome.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +12,21 @@ class Camera extends StatefulWidget {
 }
 
 class _CameraState extends State<Camera> {
+   final databaseReference = Firestore.instance;
   File _image;
   var all = new List();
+  var _listSection = List<Widget>();
+  String allText;
+  Card listSectionMethod(String title) {
+    return new Card(
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
   Future getImage() async{
   var image;
   image = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -23,38 +39,118 @@ class _CameraState extends State<Camera> {
   ImageLabelerOptions(confidenceThreshold: 0.75),
 );
     all.clear();
+    allText = "";
     final List<ImageLabel> labels = await labeler.processImage(visionImage);
     for (ImageLabel label in labels) {
   final String text = label.text;
   setState(() {
           all.add(text);
+          allText += text + " ";
+          
       });
+      
+      
   final String entityId = label.entityId;
   final double confidence = label.confidence;
 }
-labeler.close();
+setState((){_listSection.add(listSectionMethod(all.contains(
+  "fruit")?"Food"
+: "Orange")); });labeler.close();
 }
-
-  @override
+   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Camera',
       home: new Scaffold(
-        appBar: new AppBar(
-          title: Text('Camera'),
+        appBar: AppBar(
+      title: Text(
+        'FoodConnect',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: 'TenaliRamakrishna',
+          color: Colors.white,
+          fontSize: 30,
         ),
+      ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            iconSize: 30.0,
+            color: Colors.white,
+           onPressed: (){
+            //  Navigator.of(context).pushReplacement(
+            //     MaterialPageRoute(builder: (context) => Welcome())
+            //   );
+           }) //{
+           //   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) //=> Texting()));
+          //  },
+        ],)
+          
+        ,
+        backgroundColor: Colors.lightGreen[400],
         body:Center(
-              child: ListView.builder(
-            itemCount: all.length,
-              itemBuilder: (context, i){
-                  return ListTile(
-                    title: Text(all.length > 0? all[i]:"No Image Detected ${all.length}" ),
-                  );
-                
-      },
-              )
-              // child: _image == null? Text('No Image Selected'): Image.file(_image),
+            child: ListView(
+              children: <Widget>[
+                SizedBox(height: 20,),
+
+    //                new Container(
+    //           width: 250.0,
+    //       height: 250.0,
+    //   alignment: Alignment.center,
+    //   decoration: new BoxDecoration(
+
+    //   image: DecorationImage(
+    //       image: AssetImage('assets/Launcher_Icon.png'),
+    //       fit: BoxFit.fill
+    //   ),
+    // ),      
+        Container(
+          alignment: Alignment.center,
+          child: _image == null ? Text('No Image Showing') : Image.file(_image, height: 200,
+          width: 300,),
+        ),
+        SizedBox(height: 20,),
+         Column(
+              children: _listSection
             ),
+            FlatButton(
+              color: Colors.lightGreen,
+              child: Text(
+                'Donate!',
+                style: TextStyle(
+                  fontFamily: "Arial",
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[900],
+                  fontSize: 18
+                ),
+              ),
+              onPressed: (){
+                deleteRecord();
+              },
+            ),
+             FlatButton(
+              color: Colors.lightGreen,
+              child: Text(
+                'Edit Information',
+                style: TextStyle(
+                  fontFamily: "Arial",
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[900],
+                  fontSize: 18
+                ),
+              ),
+              onPressed: (){
+                
+              },
+            ),
+      
+                      
+                
+        // Text(allText != "" && all.contains("fruit")? "Orange": "No Food Found"),
+                  ],
+                )
+                ),
+                // child: _image == null? Text('No Image Selected'): Image.file(_image),
+          
             // Text(
             //   all.length > 0 ? all[0]: ''
             //   ,
@@ -68,4 +164,15 @@ labeler.close();
 
         )
       );}
+      
+  void deleteRecord() async {
+    Firestore.instance.collection('requested_items').document("Orange").delete().whenComplete((){
+  print('Field Deleted');
+   setState(() {
+                
+                _listSection.removeLast();
+              });
+});
+  }
 }
+

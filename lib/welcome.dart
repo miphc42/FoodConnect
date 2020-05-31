@@ -33,6 +33,8 @@ class _WelcomeState extends State<Welcome> {
         );
       }
     });
+  
+  
 
     return Scaffold(
       appBar: NiceBar(),

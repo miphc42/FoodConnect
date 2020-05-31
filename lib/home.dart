@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodbank/Global/niceBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:foodbank/welcome.dart';
 
 
 class Home extends StatefulWidget {
@@ -46,7 +47,29 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NiceBar(),
+      appBar: AppBar(
+      title: Text(
+        'FoodConnect',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: 'TenaliRamakrishna',
+          color: Colors.white,
+          fontSize: 30,
+        ),
+      ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            iconSize: 30.0,
+            color: Colors.white,
+           onPressed: (){
+            //  Navigator.of(context).pushReplacement(
+            //     MaterialPageRoute(builder: (context) => Welcome())
+            //   );
+           }) //{
+           //   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) //=> Texting()));
+          //  },
+        ],),
       backgroundColor: Colors.lightGreen[400],
       body: Center(
         child: ListView(
