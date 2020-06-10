@@ -1,4 +1,4 @@
-# FoodConnect 
+# FoodConnect (Rookie Hacks)
 
 # Inspiration
 During this time it is especially important to ensure food security for those in need, this was the main inspiration for FoodConnect.
